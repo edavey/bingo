@@ -1,0 +1,120 @@
+#!/usr/bin/env ruby -wU
+
+require 'highline'
+require 'pry'
+
+BALLS = [
+   { number:  1, nickname: "Kelly's Eye" },
+   { number:  2, nickname: "One little duck." },
+   { number:  3, nickname: "Cup of tea" },
+   { number:  4, nickname: "Knock at the door" },
+   { number:  5, nickname: "Man alive" },
+   { number:  6, nickname: "Tom Mix" },
+   { number:  7, nickname: "Lucky" },
+   { number:  8, nickname: "Garden gate" },
+   { number:  9, nickname: "Take a line " },
+   { number: 10, nickname: "(Boris's) Den" },
+   { number: 11, nickname: "Legs eleven" },
+   { number: 12, nickname: "One dozen" },
+   { number: 13, nickname: "Unlucky for some" },
+   { number: 14, nickname: "The Lawnmower" },
+   { number: 15, nickname: "Young and Keen" },
+   { number: 16, nickname: "Never been kissed" },
+   { number: 17, nickname: "Dancing Queen" },
+   { number: 18, nickname: "Coming of Age" },
+   { number: 19, nickname: "Goodbye Teens" },
+   { number: 20, nickname: "One Score" },
+   { number: 21, nickname: "Key of the Door" },
+   { number: 22, nickname: "Two little ducks" },
+   { number: 23, nickname: "The Lord is My Shepherd" },
+   { number: 24, nickname: "Two dozen" },
+   { number: 25, nickname: "Duck and dive" },
+   { number: 26, nickname: "Two and six, half a crown" },
+   { number: 27, nickname: "Duck and a crutch." },
+   { number: 28, nickname: "In a state." },
+   { number: 29, nickname: "Rise and Shine" },
+   { number: 30, nickname: "Burlington Bertie" },
+   { number: 31, nickname: "Get Up and Run" },
+   { number: 32, nickname: "Buckle My Shoe" },
+   { number: 33, nickname: "All the threes" },
+   { number: 34, nickname: "Ask for More" },
+   { number: 35, nickname: "Jump and Jive" },
+   { number: 36, nickname: "Triple dozen" },
+   { number: 38, nickname: "Christmas cake" },
+   { number: 39, nickname: "Steps" },
+   { number: 40, nickname: "Life Begins" },
+   { number: 43, nickname: "down on your knees" },
+   { number: 44, nickname: "Droopy drawers" },
+   { number: 45, nickname: "Halfway there" },
+   { number: 46, nickname: "up to tricks" },
+   { number: 48, nickname: "Four Dozen" },
+   { number: 49, nickname: "PC" },
+   { number: 50, nickname: "It's a bullseye!" },
+   { number: 52, nickname: "Danny La Rue" },
+   { number: 53, nickname: "Here comes Herbie" },
+   { number: 54, nickname: "Man at the door" },
+   { number: 55, nickname: "All the fives" },
+   { number: 56, nickname: "Shotts Bus" },
+   { number: 57, nickname: "Heinz Varieties" },
+   { number: 59, nickname: "The Brighton Line" },
+   { number: 60, nickname: "Grandma's getting frisky" },
+   { number: 62, nickname: "Tickety-boo" },
+   { number: 63, nickname: "Katie's bad knee" },
+   { number: 64, nickname: "Almost retired" },
+   { number: 65, nickname: "Retirement age, Stop work" },
+   { number: 66, nickname: "Clickety click" },
+   { number: 67, nickname: "Stairway to Heaven" },
+   { number: 68, nickname: "Pick a Mate" },
+   { number: 69, nickname: "Anyway up, Meal for Two, A Favourite of mine" },
+   { number: 71, nickname: "Bang on the Drum" },
+   { number: 72, nickname: "Danny La Rue" },
+   { number: 73, nickname: "Queen Bee. Under The Tree. Lucky 3" },
+   { number: 74, nickname: "Hit the Floor" },
+   { number: 76, nickname: "Trombones" },
+   { number: 77, nickname: "Two little crutches" },
+   { number: 78, nickname: "39 more steps" },
+   { number: 80, nickname: "Gandhi's Breakfast" },
+   { number: 81, nickname: "Fat Lady with a walking stick" },
+   { number: 83, nickname: "Time for Tea" },
+   { number: 84, nickname: "Seven dozen" },
+   { number: 85, nickname: "Staying alive" },
+   { number: 86, nickname: "Between the sticks" },
+   { number: 87, nickname: "Torquay in Devon" },
+   { number: 88, nickname: "Two Fat Ladies" },
+   { number: 89, nickname: "Nearly there" },
+   { number: 90, nickname: "Top of the shop" },
+].freeze
+
+def all_done
+  puts "No more balls. That's it!"
+end
+
+def game_ended
+  puts "Game finished."
+end
+
+def number(int)
+  "<%= color('#{int}', :yellow) %>"
+end
+
+def nickname(str)
+  %{<%= color("#{str}", :bright_blue) %>}
+end
+
+cli = HighLine.new
+
+number_of_balls = cli.ask("How many balls in this game?", Integer)
+bag = BALLS[0..(number_of_balls - 1)]
+
+cli.say "We are starting a game of <%= color('#{bag.size}', BOLD) %> balls."
+
+loop do
+  response = cli.ask('Hit RETURN for the next number or type FINISH to stop playing.')
+
+  break game_ended if response.upcase == 'FINISH'
+  break all_done if bag.empty?
+  ball = bag.delete(bag.sample)
+
+  cli.say("#{nickname(ball[:nickname])} -> number #{number(ball[:number])}")
+  puts
+end
