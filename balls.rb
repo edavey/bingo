@@ -221,7 +221,7 @@ BALLS = [
 
    { number: 56,
      nickname: "Shotts Bus",
-     notes: %{he number 56 bus went from Glasgow to Shotts.} },
+     notes: %{the number 56 bus went from Glasgow to Shotts.} },
 
    { number: 57,
      nickname: "Heinz Varieties",
