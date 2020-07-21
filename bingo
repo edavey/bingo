@@ -4,42 +4,59 @@ require 'highline'
 require 'pry'
 require_relative './balls'
 
-def all_done
-  puts "No more balls. That's it!"
-end
+class Game
+  attr_reader :number_of_balls, :bag, :cli
 
-def game_ended
-  puts "Game finished."
-end
+  def initialize(number_of_balls:, cli:)
+    @number_of_balls = number_of_balls
+    @bag = BALLS[0..(number_of_balls - 1)]
+    @cli = cli
+  end
 
-def number(int)
-  "<%= color('#{int}', :yellow) %>"
-end
+  def preamble
+    cli.say "We are starting a game of <%= color('#{bag.size}', BOLD) %> balls."
+  end
 
-def nickname(str)
-  %{<%= color("#{str}", :bright_blue) %>}
+  def start
+    loop do
+      response = cli.ask('Hit RETURN for the next number or type FINISH (or q) to stop playing.')
+
+      break game_ended if response.upcase == 'FINISH' || response.upcase == 'Q'
+      break all_done if bag.empty?
+      ball = bag.delete(bag.sample)
+      puts
+      cli.say("<#{nickname(ball[:nickname])}>")
+      puts
+      cli.say("  -> number #{number(ball[:number])}")
+      puts
+      cli.say(''.ljust(5) + "(#{ball[:notes]})")
+      puts
+      puts '-------'
+      puts
+    end
+  end
+
+  private
+
+  def all_done
+    puts "No more balls. That's it!"
+  end
+
+  def game_ended
+    puts "Game finished."
+  end
+
+  def number(int)
+    "<%= color('#{int}', :yellow) %>"
+  end
+
+  def nickname(str)
+    %{<%= color("#{str}", :bright_blue) %>}
+  end
 end
 
 cli = HighLine.new
-
 number_of_balls = cli.ask("How many balls in this game?", Integer)
-bag = BALLS[0..(number_of_balls - 1)]
-
-cli.say "We are starting a game of <%= color('#{bag.size}', BOLD) %> balls."
-
-loop do
-  response = cli.ask('Hit RETURN for the next number or type FINISH (or q) to stop playing.')
-
-  break game_ended if response.upcase == 'FINISH' || response.upcase == 'Q'
-  break all_done if bag.empty?
-  ball = bag.delete(bag.sample)
-  puts
-  cli.say("<#{nickname(ball[:nickname])}>")
-  puts
-  cli.say("  -> number #{number(ball[:number])}")
-  puts
-  cli.say(''.ljust(5) + "(#{ball[:notes]})")
-  puts
-  puts '-------'
-  puts
-end
+game = Game.new(number_of_balls: number_of_balls, cli: cli)
+game.preamble
+game.start
