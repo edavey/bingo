@@ -28,9 +28,9 @@ bag = BALLS[0..(number_of_balls - 1)]
 cli.say "We are starting a game of <%= color('#{bag.size}', BOLD) %> balls."
 
 loop do
-  response = cli.ask('Hit RETURN for the next number or type FINISH to stop playing.')
+  response = cli.ask('Hit RETURN for the next number or type FINISH (or q) to stop playing.')
 
-  break game_ended if response.upcase == 'FINISH'
+  break game_ended if response.upcase == 'FINISH' || response.upcase == 'Q'
   break all_done if bag.empty?
   ball = bag.delete(bag.sample)
   puts
